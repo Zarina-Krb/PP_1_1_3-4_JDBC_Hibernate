@@ -9,19 +9,19 @@ public class Main {
         UserService userService = new UserServiceImpl();
         userService.createUsersTable();
         System.out.println("User таблица создана" + userService);
-        userService.saveUser("Рита", "Мухина", (byte)23);
+        userService.saveUser("Рита", "Мухина", (byte) 23);
         System.out.println("User Рита Мухина добавлена в базу данных");
 
-        userService.saveUser("Вася", "Умный", (byte)25);
+        userService.saveUser("Вася", "Умный", (byte) 25);
         System.out.println("User Вася Умный добавлен в базу данных");
 
-        userService.saveUser("Игнат", "Петров", (byte)22);
+        userService.saveUser("Игнат", "Петров", (byte) 22);
         System.out.println("User Игнат Пертов добавлен в базу данных");
 
-        userService.saveUser("Полина", "Березкина", (byte)35);
+        userService.saveUser("Полина", "Березкина", (byte) 35);
         System.out.println("User Полина Березкина добавлена в базу данных");
 
-        for(User user :userService.getAllUsers()) {
+        for (User user : userService.getAllUsers()) {
             System.out.println(user);
         }
         userService.cleanUsersTable();

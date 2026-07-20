@@ -10,7 +10,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao = new UserDaoJDBCImpl();
 
     public void createUsersTable() {
-       userDao.createUsersTable();
+        userDao.createUsersTable();
     }
 
     public void dropUsersTable() {
@@ -32,6 +32,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public void cleanUsersTable() {
-    userDao.cleanUsersTable();
+        userDao.cleanUsersTable();
     }
 }
