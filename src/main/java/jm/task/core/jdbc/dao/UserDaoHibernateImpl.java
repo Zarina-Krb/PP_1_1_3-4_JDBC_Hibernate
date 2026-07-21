@@ -1,42 +1,119 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class UserDaoHibernateImpl implements UserDao {
-    public UserDaoHibernateImpl() {
+import static jm.task.core.jdbc.util.Util.getSessionFactory;
 
+
+public class UserDaoHibernateImpl implements UserDao {
+
+    public UserDaoHibernateImpl() {
     }
 
 
     @Override
     public void createUsersTable() {
-
+        Transaction transaction = null;
+        try (Session session = getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            String string = "CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), last_name VARCHAR(50), age TINYINT)";
+            session.createNativeQuery(string).executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            System.out.println("Ошибка транзакции" + e.getMessage());
+        }
     }
 
     @Override
     public void dropUsersTable() {
-
+        Transaction transaction = null;
+        try (Session session = getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            String string = "DROP TABLE IF EXISTS users";
+            session.createNativeQuery(string).executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            System.out.println("Ошибка транзакции" + e.getMessage());
+        }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-
+        Transaction transaction = null;
+        User user = new User(name, lastName, age);
+        try (Session session = getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(user);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            System.out.println("Ошибка транзакции" + e.getMessage());
+        }
     }
 
     @Override
     public void removeUserById(long id) {
-
+        Transaction transaction = null;
+        try (Session session = getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            User user = session.get(User.class, id);
+            if (user != null) {
+                session.delete(user);
+                transaction.commit();
+            } else {
+                System.out.println("Пользователя не существует");
+                transaction.rollback();
+            }
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            System.out.println("Ошибка транзакции" + e.getMessage());
+        }
     }
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        Transaction transaction = null;
+        List<User> list;
+        try (Session session = getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            list = session.createQuery("from User", User.class).getResultList();
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        }
+        return list;
     }
 
     @Override
     public void cleanUsersTable() {
-
+        Transaction transaction = null;
+        try (Session session = getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.createQuery("DELETE FROM User").executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            System.out.println("Ошибка транзакции" + e.getMessage());
+        }
     }
 }

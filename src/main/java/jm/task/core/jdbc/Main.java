@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         UserService userService = new UserServiceImpl();
         userService.createUsersTable();
-        System.out.println("User таблица создана" + userService);
+        System.out.println("User таблица создана");
         userService.saveUser("Рита", "Мухина", (byte) 23);
         System.out.println("User Рита Мухина добавлена в базу данных");
 
